@@ -15,10 +15,11 @@ CLANGDL="https://android.googlesource.com/platform/prebuilts/clang/host/linux-x8
         # direct link to Clang toolchain
 #############################
 
-case $HOSTNAME in
-  (fv-az*)  ISACTIONS=1 ;;
-  (*)  ISACTIONS=0 ;;
-esac
+if [ "$GITHUB_ACTIONS" = "true" ]; then
+    ISACTIONS=1
+else
+    ISACTIONS=0
+fi
 
 getsource () {
     if [ ! -d "common" ]; then
