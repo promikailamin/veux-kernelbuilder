@@ -78,7 +78,7 @@ startbuild () {
     if [ $KSU = 1 ]; then
         if [[ ! -d common/drivers/kernelsu ]]; then
         echo Integrating KernelSU
-        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s v0.9.5
+        curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -
         else
         echo "KernelSU drivers already added to source, skipping setup script."
         fi
