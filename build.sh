@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 #############################
 #      REQUIRED SETUP
 KSU=1 # set to 1 to enable KernelSU; if not leave the same
@@ -87,7 +87,7 @@ startbuild () {
     echo ================================================
     echo Build started on $HOSTNAME with $(nproc) threads
     echo Target:
-    VSUFFIX="$(grep -m 1 "VERSION" common/Makefile | sed 's/.*= *//' | tr -d ' ').$(grep -m 1 "PATCHLEVEL" common/Makefile | sed 's/.*= *//' | tr -d ' ').$(grep -m 1 "SUBLEVEL" common/Makefile | sed 's/.*= *//' | tr -d ' ')"
+    VSUFFIX="$(grep -m 1 "VERSION" common/Makefile | sed 's/.*= *//' | tr -d ' ').$(grep -m 1 "PATCHLEVEL" common/Makefile | sed 's/.*= *//' | tr -d ' ').$(grep -m 1 "SUBLEVEL" common/Makefile | s[...]
     if [ $KSU = 1 ]; then VSUFFIX+="-KernelSU" ; fi
     echo "Android ${VSUFFIX} (commit $(cd common && git rev-parse HEAD))"
     echo $VSUFFIX > VERSION.txt
@@ -174,4 +174,3 @@ if [ -n "$1" ]; then
 else
     envcheck && getsource && gettools && startbuild && finalize
 fi
-
