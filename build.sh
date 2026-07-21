@@ -1,4 +1,4 @@
-#!/bin/bash
+#/bin/bash
 #############################
 #      REQUIRED SETUP
 KSU=1 # set to 1 to enable KernelSU; if not leave the same
@@ -83,6 +83,14 @@ startbuild () {
         echo "KernelSU drivers already added to source, skipping setup script."
         fi
     fi
+
+    # Patch sucompat includes in downloaded source (if present)
+    FILE="common/drivers/kernelsu/feature/sucompat.c"
+    if [ -f "$FILE" ]; then
+      sed -i "s|#include <linux/pgtable.h>|#include <linux/mm.h>\n#include <asm/pgtable.h>|" "$FILE" || true
+      echo "Patched $FILE"
+    fi
+
     set +x
     echo ================================================
     echo Build started on $HOSTNAME with $(nproc) threads
@@ -94,9 +102,11 @@ startbuild () {
     echo ================================================
     echo Calling back-end script...
     set -x
+    # Ensure MAKEFLAGS is set to reduce parallelism and avoid OOM
+    export MAKEFLAGS=${MAKEFLAGS:--j2}
     if [ $ISACTIONS = 1 ]; then
         echo "INFO: GitHub Actions host detected, build log won't be piped/redirected"
-        echo "INFO: To retrieve logs, click the gear button next to "Search logs" then "Download log archive""
+        echo "INFO: To retrieve logs, click the gear button next to \"Search logs\" then \"Download log archive\""
         DEFCONFIG="$DEFCONFIG" BUILD_CONFIG=common/build.config.veux build/build.sh
     elif grep -q "V=1" common/build.config.veux; then
         #Prevent console flooding in verbose mode
